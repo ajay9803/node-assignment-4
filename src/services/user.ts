@@ -1,3 +1,4 @@
+import { ConflictError } from "../error/conflict_error";
 import { NotFoundError } from "../error/not_found_error";
 import { User } from "../interfaces/user";
 import * as UserModel from "../models/user";
@@ -5,10 +6,17 @@ import bcrypt from "bcrypt";
 
 export function add(a: number, b: number) {
   return a + b;
-}
+}   
 
 // create new user
 export const createUser = async (user: Omit<User, "id">) => {
+
+  const existingUser = UserModel.getUserByEmail(user.email);
+
+  // avoid duplicate email address
+  if (existingUser) {
+    throw new ConflictError("User already exists.");
+  }
   // hash the password - to store hashed password to the users data
   const hashedPassword = await bcrypt.hash(user.password, 10);
   const newUser = {
