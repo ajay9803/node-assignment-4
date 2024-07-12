@@ -3,6 +3,10 @@ import { User } from "../interfaces/user";
 import * as UserModel from "../models/user";
 import bcrypt from "bcrypt";
 
+export function add(a: number, b: number) {
+  return a + b;
+}
+
 // create new user
 export const createUser = async (user: Omit<User, "id">) => {
   // hash the password - to store hashed password to the users data
