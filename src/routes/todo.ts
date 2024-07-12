@@ -9,6 +9,11 @@ import {
 } from "../controllers/todo";
 import { authenticate } from "../middlewares/auth";
 import { authorize } from "../middlewares/authorize";
+import {
+  validateReqBody,
+  validateRequestParams,
+} from "../middlewares/validator";
+import { createTodoBodySchema, getTodoParamsSchema } from "../schemas/todo";
 
 // todo - router
 const router = express();
@@ -22,17 +27,37 @@ router.get("/all/", authenticate, authorize("todos.fetch"), getAllTodos);
 router.get("/:id", authenticate, authorize("todos.fetch"), getTodoById);
 
 // create a todo
-router.post("/", authenticate, authorize("todos.create"), createTodo);
+router.post(
+  "/",
+  validateReqBody(createTodoBodySchema),
+  authenticate,
+  authorize("todos.create"),
+  createTodo
+);
 
 // delete a todo
-router.delete("/:id", authenticate, authorize("todos.delete"), deleteTodoById);
+router.delete(
+  "/:id",
+  validateRequestParams(getTodoParamsSchema),
+  authenticate,
+  authorize("todos.delete"),
+  deleteTodoById
+);
 
 // update a todo
-router.put("/:id", authenticate, authorize("todos.update"), updateTodo);
+router.put(
+  "/:id",
+  validateRequestParams(getTodoParamsSchema),
+  validateReqBody(createTodoBodySchema),
+  authenticate,
+  authorize("todos.update"),
+  updateTodo
+);
 
 // update todo's is-completed status
 router.patch(
   "/:id",
+  validateRequestParams(getTodoParamsSchema),
   authenticate,
   authorize("todos.update"),
   updateTodoIsCompletedStatus
