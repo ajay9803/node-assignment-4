@@ -16,6 +16,7 @@ Data validation has been added to all the routes using Joi package.
 - Data validation with Joi
 - Use of limiter-package to limit request
 - Use of helmet-package to be safe from web-vulnerabilites
+- Use of Cors for to allow safe domains
 
 ## Installation
 
